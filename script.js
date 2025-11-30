@@ -85,15 +85,14 @@ function getRandomItem(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-// Get a message that matches length (within 3 characters)
-function getMatchingLengthMessage(targetMessage, messageArray, maxDifference = 3) {
+function getMatchingLengthMessage(targetMessage, messageArray) {
     const targetLength = targetMessage.length;
     
     // Try 10 random messages and pick the closest one in length
     let closestMessage = null;
     let closestDifference = Infinity;
     
-    for (let i = 0; i < Math.min(20, messageArray.length); i++) {
+    for (let i = 0; i < Math.min(100, messageArray.length); i++) {
         const randomMessage = getRandomItem(messageArray);
         const msgLength = typeof randomMessage === 'string' ? randomMessage.length : randomMessage.message.length;
         const difference = Math.abs(msgLength - targetLength);
