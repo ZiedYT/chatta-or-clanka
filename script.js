@@ -93,7 +93,7 @@ function getMatchingLengthMessage(targetMessage, messageArray, maxDifference = 3
     let closestMessage = null;
     let closestDifference = Infinity;
     
-    for (let i = 0; i < Math.min(10, messageArray.length); i++) {
+    for (let i = 0; i < Math.min(20, messageArray.length); i++) {
         const randomMessage = getRandomItem(messageArray);
         const msgLength = typeof randomMessage === 'string' ? randomMessage.length : randomMessage.message.length;
         const difference = Math.abs(msgLength - targetLength);
