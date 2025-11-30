@@ -52,10 +52,6 @@ h1 {
     color: #333;
     margin-bottom: 20px;
     font-weight: 600;
-    padding: 15px;
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .messages {

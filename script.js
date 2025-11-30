@@ -1,5 +1,6 @@
 let realMessages = [];
 let aiMessages = [];
+let usedAiMessages = []; // Track used AI messages
 let currentStreak = 0;
 let currentRealMessage = null;
 let currentAiMessage = null;
@@ -104,6 +105,18 @@ function getMatchingLengthMessage(targetMessage, messageArray, maxDifference = 3
 
 // Display game
 function displayGame() {
+    // Check if we've run out of AI messages
+    if (aiMessages.length === 0) {
+        document.getElementById('gameArea').innerHTML = `
+            <div class="error">
+                <h2>No more messages available!</h2>
+                <p>You've seen all the AI-generated messages.</p>
+                <button onclick="resetMessages()">Play Again</button>
+            </div>
+        `;
+        return;
+    }
+
     if (realMessages.length === 0 || aiMessages.length === 0) {
         document.getElementById('gameArea').innerHTML = '<div class="error">Error loading messages. Please try again.</div>';
         return;
@@ -125,9 +138,15 @@ function displayGame() {
         <div class="messages">
             <div class="message-card" data-real="${realOnLeft}" onclick="selectMessage(this, ${realOnLeft})">
                 <div class="message-text">${escapeHtml(realOnLeft ? currentRealMessage.message : currentAiMessage)}</div>
+                <div style="margin-top: 10px; font-size: 0.9em; opacity: 0.7; font-weight: bold;">
+                    ${realOnLeft ? `- ${escapeHtml(currentRealMessage.user)}` : '- AI Generated'}
+                </div>
             </div>
             <div class="message-card" data-real="${!realOnLeft}" onclick="selectMessage(this, ${!realOnLeft})">
                 <div class="message-text">${escapeHtml(realOnLeft ? currentAiMessage : currentRealMessage.message)}</div>
+                <div style="margin-top: 10px; font-size: 0.9em; opacity: 0.7; font-weight: bold;">
+                    ${realOnLeft ? '- AI Generated' : `- ${escapeHtml(currentRealMessage.user)}`}
+                </div>
             </div>
         </div>
         <div class="result-message" id="resultMessage"></div>
@@ -191,8 +210,28 @@ function selectMessage(element, isReal) {
 
 // Next round
 function nextRound() {
+    // Remove the used AI message from the pool
+    const index = aiMessages.indexOf(currentAiMessage);
+    if (index > -1) {
+        usedAiMessages.push(aiMessages[index]);
+        aiMessages.splice(index, 1);
+    }
+    
     displayGame();
 }
+
+// Reset messages to play again
+function resetMessages() {
+    // Restore all AI messages
+    aiMessages = [...aiMessages, ...usedAiMessages];
+    usedAiMessages = [];
+    currentStreak = 0;
+    document.getElementById('streakCount').textContent = currentStreak;
+    displayGame();
+}
+
+// Make resetMessages globally accessible
+window.resetMessages = resetMessages;
 
 // Initialize game
 async function init() {
