@@ -89,18 +89,22 @@ function getRandomItem(array) {
 function getMatchingLengthMessage(targetMessage, messageArray, maxDifference = 3) {
     const targetLength = targetMessage.length;
     
-    // Filter messages within the acceptable length range
-    const matchingMessages = messageArray.filter(msg => {
-        const msgLength = typeof msg === 'string' ? msg.length : msg.message.length;
-        return Math.abs(msgLength - targetLength) <= maxDifference;
-    });
+    // Try 10 random messages and pick the closest one in length
+    let closestMessage = null;
+    let closestDifference = Infinity;
     
-    // If we have matching messages, pick one; otherwise pick any message
-    if (matchingMessages.length > 0) {
-        return getRandomItem(matchingMessages);
+    for (let i = 0; i < Math.min(10, messageArray.length); i++) {
+        const randomMessage = getRandomItem(messageArray);
+        const msgLength = typeof randomMessage === 'string' ? randomMessage.length : randomMessage.message.length;
+        const difference = Math.abs(msgLength - targetLength);
+        
+        if (difference < closestDifference) {
+            closestDifference = difference;
+            closestMessage = randomMessage;
+        }
     }
     
-    return getRandomItem(messageArray);
+    return closestMessage || getRandomItem(messageArray);
 }
 
 // Display game
@@ -110,11 +114,11 @@ function displayGame() {
         return;
     }
 
-    // Pick a random real message first
-    currentRealMessage = getRandomItem(realMessages);
+    // Pick a random AI message first
+    currentAiMessage = getRandomItem(aiMessages);
     
-    // Then find an AI message with similar length
-    currentAiMessage = getMatchingLengthMessage(currentRealMessage.message, aiMessages);
+    // Then find a real message with similar length
+    currentRealMessage = getMatchingLengthMessage(currentAiMessage, realMessages);
     
     hasAnswered = false;
 
