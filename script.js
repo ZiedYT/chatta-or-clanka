@@ -165,7 +165,8 @@ function selectMessage(element, isReal) {
         resultMessage.innerHTML = `
             ✅ Correct! That was a real chatter!<br>
             <small style="opacity: 0.8; font-size: 0.9em;">
-                Posted by ${escapeHtml(currentRealMessage.user)} at ${escapeHtml(currentRealMessage.date_time)}<br>
+                The real message was written by <strong>${escapeHtml(currentRealMessage.user)}</strong><br>
+                Posted at ${escapeHtml(currentRealMessage.date_time)}<br>
                 <a href="${escapeHtml(currentRealMessage.vod_link)}" target="_blank" style="color: #667eea; text-decoration: none;">View VOD →</a>
             </small>
         `;
@@ -176,7 +177,8 @@ function selectMessage(element, isReal) {
             ❌ Wrong! That was AI generated!<br>
             <small style="opacity: 0.8; font-size: 0.9em;">
                 The real message was: "${escapeHtml(currentRealMessage.message)}"<br>
-                Posted by ${escapeHtml(currentRealMessage.user)} at ${escapeHtml(currentRealMessage.date_time)}<br>
+                Written by <strong>${escapeHtml(currentRealMessage.user)}</strong><br>
+                Posted at ${escapeHtml(currentRealMessage.date_time)}<br>
                 <a href="${escapeHtml(currentRealMessage.vod_link)}" target="_blank" style="color: #667eea; text-decoration: none;">View VOD →</a>
             </small>
         `;
