@@ -7,7 +7,20 @@ let hasAnswered = false;
 
 // Get streamer name from URL
 const urlParams = new URLSearchParams(window.location.search);
-const streamerName = urlParams.get('name') || 'zoil';
+const streamerName = urlParams.get('name');
+
+if (!streamerName) {
+    document.getElementById('streamerName').textContent = 'Error: No streamer specified';
+    document.getElementById('gameArea').innerHTML = `
+        <div class="error">
+            <h2>No Streamer Specified</h2>
+            <p>Please add a streamer name to the URL:</p>
+            <code>index.html?name=yourstreamer</code>
+        </div>
+    `;
+    throw new Error('No streamer name provided in URL');
+}
+
 document.getElementById('streamerName').textContent = `Streamer: ${streamerName}`;
 
 // Load CSV file
@@ -71,6 +84,24 @@ function getRandomItem(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
+// Get a message that matches length (within 3 characters)
+function getMatchingLengthMessage(targetMessage, messageArray, maxDifference = 3) {
+    const targetLength = targetMessage.length;
+    
+    // Filter messages within the acceptable length range
+    const matchingMessages = messageArray.filter(msg => {
+        const msgLength = typeof msg === 'string' ? msg.length : msg.message.length;
+        return Math.abs(msgLength - targetLength) <= maxDifference;
+    });
+    
+    // If we have matching messages, pick one; otherwise pick any message
+    if (matchingMessages.length > 0) {
+        return getRandomItem(matchingMessages);
+    }
+    
+    return getRandomItem(messageArray);
+}
+
 // Display game
 function displayGame() {
     if (realMessages.length === 0 || aiMessages.length === 0) {
@@ -78,8 +109,12 @@ function displayGame() {
         return;
     }
 
+    // Pick a random real message first
     currentRealMessage = getRandomItem(realMessages);
-    currentAiMessage = getRandomItem(aiMessages);
+    
+    // Then find an AI message with similar length
+    currentAiMessage = getMatchingLengthMessage(currentRealMessage.message, aiMessages);
+    
     hasAnswered = false;
 
     // Randomly decide which side gets real message
@@ -130,7 +165,8 @@ function selectMessage(element, isReal) {
         resultMessage.innerHTML = `
             ✅ Correct! That was a real chatter!<br>
             <small style="opacity: 0.8; font-size: 0.9em;">
-                Posted by ${escapeHtml(currentRealMessage.user)} at ${escapeHtml(currentRealMessage.date_time)}
+                Posted by ${escapeHtml(currentRealMessage.user)} at ${escapeHtml(currentRealMessage.date_time)}<br>
+                <a href="${escapeHtml(currentRealMessage.vod_link)}" target="_blank" style="color: #667eea; text-decoration: none;">View VOD →</a>
             </small>
         `;
         resultMessage.className = 'result-message correct';
@@ -140,7 +176,8 @@ function selectMessage(element, isReal) {
             ❌ Wrong! That was AI generated!<br>
             <small style="opacity: 0.8; font-size: 0.9em;">
                 The real message was: "${escapeHtml(currentRealMessage.message)}"<br>
-                Posted by ${escapeHtml(currentRealMessage.user)} at ${escapeHtml(currentRealMessage.date_time)}
+                Posted by ${escapeHtml(currentRealMessage.user)} at ${escapeHtml(currentRealMessage.date_time)}<br>
+                <a href="${escapeHtml(currentRealMessage.vod_link)}" target="_blank" style="color: #667eea; text-decoration: none;">View VOD →</a>
             </small>
         `;
         resultMessage.className = 'result-message incorrect';
