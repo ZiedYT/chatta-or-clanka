@@ -22,7 +22,7 @@ if (!streamerName) {
     throw new Error('No streamer name provided in URL');
 }
 
-document.getElementById('instruction').textContent = `👉 Can you find the ${streamerName} chatter? 👈`;
+document.getElementById('instruction').textContent = `Can you find the ${streamerName} chatter?`;
 
 // Load CSV file
 async function loadCSV() {
