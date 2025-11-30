@@ -31,15 +31,6 @@ h1 {
     font-size: 2.5em;
 }
 
-.streamer-name {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    color: #667eea;
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
 .streak {
     position: absolute;
     top: 20px;

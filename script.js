@@ -11,7 +11,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const streamerName = urlParams.get('name');
 
 if (!streamerName) {
-    document.getElementById('streamerName').textContent = 'Error: No streamer specified';
+    document.getElementById('instruction').textContent = 'Error: No streamer specified';
     document.getElementById('gameArea').innerHTML = `
         <div class="error">
             <h2>No Streamer Specified</h2>
@@ -22,7 +22,7 @@ if (!streamerName) {
     throw new Error('No streamer name provided in URL');
 }
 
-document.getElementById('streamerName').textContent = `Streamer: ${streamerName}`;
+document.getElementById('instruction').textContent = `👉 Can you find the ${streamerName} chatter? 👈`;
 
 // Load CSV file
 async function loadCSV() {
