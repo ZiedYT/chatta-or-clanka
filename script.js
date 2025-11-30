@@ -105,18 +105,6 @@ function getMatchingLengthMessage(targetMessage, messageArray, maxDifference = 3
 
 // Display game
 function displayGame() {
-    // Check if we've run out of AI messages
-    if (aiMessages.length === 0) {
-        document.getElementById('gameArea').innerHTML = `
-            <div class="error">
-                <h2>No more messages available!</h2>
-                <p>You've seen all the AI-generated messages.</p>
-                <button onclick="resetMessages()">Play Again</button>
-            </div>
-        `;
-        return;
-    }
-
     if (realMessages.length === 0 || aiMessages.length === 0) {
         document.getElementById('gameArea').innerHTML = '<div class="error">Error loading messages. Please try again.</div>';
         return;
@@ -138,15 +126,9 @@ function displayGame() {
         <div class="messages">
             <div class="message-card" data-real="${realOnLeft}" onclick="selectMessage(this, ${realOnLeft})">
                 <div class="message-text">${escapeHtml(realOnLeft ? currentRealMessage.message : currentAiMessage)}</div>
-                <div style="margin-top: 10px; font-size: 0.9em; opacity: 0.7; font-weight: bold;">
-                    ${realOnLeft ? `- ${escapeHtml(currentRealMessage.user)}` : '- AI Generated'}
-                </div>
             </div>
             <div class="message-card" data-real="${!realOnLeft}" onclick="selectMessage(this, ${!realOnLeft})">
                 <div class="message-text">${escapeHtml(realOnLeft ? currentAiMessage : currentRealMessage.message)}</div>
-                <div style="margin-top: 10px; font-size: 0.9em; opacity: 0.7; font-weight: bold;">
-                    ${realOnLeft ? '- AI Generated' : `- ${escapeHtml(currentRealMessage.user)}`}
-                </div>
             </div>
         </div>
         <div class="result-message" id="resultMessage"></div>
